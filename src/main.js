@@ -4,7 +4,6 @@ import { code } from 'telegraf/format'
 import config from 'config'
 import { ogg } from './ogg.js'
 import { openai } from './openai.js'
-console.log(config.get('TEST_ENV'))
 
 const INITIAL_SESSION = {
     messages: [],
@@ -57,7 +56,7 @@ bot.on(message('text'), async (ctx) => {
     ctx.session ??= INITIAL_SESSION
     try {
         await ctx.reply(code('Сообщение принято. Жду ответа от сервера ...'))
-
+        
         
 
         ctx.session.messages.push({

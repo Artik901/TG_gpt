@@ -43,7 +43,7 @@ class OggConverter {
                 url,
                 responseType: 'stream'
             })
-            return new Promise(resolve => {
+            return new Promise((resolve) => {
                 const stream = createWriteStream(oggPath)
                 response.data.pipe(stream)
                 stream.on('finish', () => resolve(oggPath))

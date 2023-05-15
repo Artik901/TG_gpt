@@ -21,6 +21,8 @@ class OpenAI {
             const response =  await this.openai.createChatCompletion({
                 model: 'gpt-3.5-turbo',
                 messages,
+                max_tokens: 2048,
+                temperature: 0.9,
 
             })
             return response.data.choices[0].message
