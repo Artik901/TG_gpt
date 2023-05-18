@@ -5,6 +5,7 @@ import config from 'config'
 import { ogg } from './ogg.js'
 import { openai } from './openai.js'
 
+
 const INITIAL_SESSION = {
     messages: [],
 }
@@ -21,6 +22,11 @@ bot.command('start', async (ctx) => {
     ctx.session = INITIAL_SESSION
     await ctx.reply('Жду вашего голосового или текстового сообщения')
 })
+bot.command('restart', async (ctx) => {
+    pm2.restart()
+    ctx.session = INITIAL_SESSION
+    await ctx.reply('Restart done!')
+})
 
 bot.on(message('voice'), async (ctx) => {
     ctx.session ??= INITIAL_SESSION
@@ -35,20 +41,21 @@ bot.on(message('voice'), async (ctx) => {
         await ctx.reply(code(`Ваш запрос: ${text}`))
 
         ctx.session.messages.push({
-             role: openai.roles.USER, 
-             content: text })
+            role: openai.roles.USER,
+            content: text
+        })
 
         const response = await openai.chat(ctx.session.messages)
 
         ctx.session.messages.push({
-             role: openai.roles.ASSISTANT, 
-             content: response.content 
-            })
+            role: openai.roles.ASSISTANT,
+            content: response.content
+        })
 
 
         await ctx.reply(response.content)
     } catch (e) {
-        console.log('Error while voice message', e.message)
+        console.log('Error while voice message', e.message)//fix
     }
 
 })
@@ -56,13 +63,13 @@ bot.on(message('text'), async (ctx) => {
     ctx.session ??= INITIAL_SESSION
     try {
         await ctx.reply(code('Сообщение принято. Жду ответа от сервера ...'))
-        
-        
+
+
 
         ctx.session.messages.push({
-             role: openai.roles.USER, 
-             content: ctx.message.text 
-            })
+            role: openai.roles.USER,
+            content: ctx.message.text
+        })
 
         const response = await openai.chat(ctx.session.messages)
 
